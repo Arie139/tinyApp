@@ -12,7 +12,7 @@
     </div>
     <div class="ml-auto">
       <% if(!username){ %>
-        <form class="form-inline" method="POST" action="/login"><input type="text" name="username" placeholder="Username"> <input type="submit" value="Login"></form>
+        <form class="form-inline" method="POST" action="/login"><input type="text" name="username" placeholder="Username"> <input type="submit" value="Login" style="margin-left: 1em"></form>
       <% } else if(username){ %>
         <form class="form" method="POST" action="/logout">Logged in As: <%= username %><input type="submit" value="Logout" style="margin-left: 2em"></form>
       <% } %>
