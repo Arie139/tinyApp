@@ -10,11 +10,12 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-    <div class="ml-auto">
-      <% if(!username){ %>
-        <form class="form-inline" method="POST" action="/login"><input type="text" name="username" placeholder="Username"> <input type="submit" value="Login" style="margin-left: 1em"></form>
-      <% } else if(username){ %>
-        <form class="form" method="POST" action="/logout">Logged in As: <%= username %><input type="submit" value="Logout" style="margin-left: 2em"></form>
+    <div class="navbar-nav">
+      <% if(!user_id){ %>
+        <a class="nav-item nav-link" href="/register">Register</a>
+          <a class="nav-item nav-link" href="/login">Login</a>
+      <% } else { %>
+        <form class="form" method="POST" action="/logout">Logged in as:<%= email %><input type="submit" value="Logout" style="margin-left: 2em"></form>
       <% } %>
       </div>
   </nav>
