@@ -118,14 +118,16 @@ app.get("/u/:shortURL", (req, res) => {
   return res.redirect(url.longURL); // new url
 });
 
+// login page
 app.get('/login', (req, res) => {
   const templateVars = { 
     user_id: req.session.user_id, 
     email: getEmail(req.session.user_id) 
   };
   res.render('login', templateVars);
-})// login page
+})
 
+//login page user input
 app.post('/login', (req, res) => {
   if (req.body.email.length === 0) {
     return res.status(400).send('Please enter a valid email');
@@ -141,20 +143,22 @@ app.post('/login', (req, res) => {
   }
   req.session.user_id = user.user_id;
   return res.redirect('/urls');
-})//login page user input
+})
 
+//logout page
 app.post('/logout', (req, res) => {
   req.session = null;
   return res.redirect('/urls');
-})//logout page
+})
 
+// register page
 app.get("/register", (req, res) => {
   const templateVars = {
     user_id: req.session.user_id, 
     email: getEmail(req.session.user_id)
   };
   return res.render('register', templateVars);
-});// register page
+});
 
 app.post('/register', (req, res) => {
   if (req.body.email === "") {
