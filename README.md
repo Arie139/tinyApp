@@ -4,16 +4,16 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## Final Product
 Login
-https://github.com/arie139/tinyApp/blob/main/READMEimg/login.png?raw=true
+https://github.com/arie139/tinyApp/blob/main/READMEimg/login.png
 
 Creating new Url shortcuts
-https://github.com/arie139/tinyApp/blob/main/READMEimg/create_url.png?raw=true
+https://github.com/arie139/tinyApp/blob/main/READMEimg/create_url.png
 
 Created Url details
-https://github.com/arie139/tinyApp/blob/main/READMEimg/create_url_details.png?raw=true
+https://github.com/arie139/tinyApp/blob/main/READMEimg/create_url_details.png
 
 User Url database
-https://github.com/arie139/tinyApp/blob/main/READMEimg/user_urls.png?raw=true
+https://github.com/arie139/tinyApp/blob/main/READMEimg/user_urls.png
 
 
 ## Dependencies
