@@ -11,67 +11,22 @@ app.use(cookieSession({
   keys: ["key1", "key2"],
 }));
 
+const {
+  generateRandomString,
+  getUserByEmail,
+  getUrls,
+  getEmail,
+  urlDatabase,
+  users
+} = require('./views/helperAndDb');
 
-const users = { 
-  "95xkr9": {
-    id: "95xkr9", 
-    email: "user@example.com", 
-    password: "123"
-  },
- "2ps7g3": {
-    id: "2ps7g3", 
-    email: "user2@example.com", 
-    password: "dishwasher-funk"
-  } //user database
-};
 
-function generateRandomString() {
-  let r = (Math.random() + 1).toString(36).substring(6)
-  return r;
-}// rnd key generator 6 alphanumeric
-
-const getEmail = user_id => {
-  if(users[user_id]) {
-    return users[user_id].email;
-  } else {
-    return null;
-  }
-};//email from id
-
-const getUserByEmail = email => {
-  for (let userId in users) {
-    if (users[userId].email === email) {
-      return users[userId];
-    }
-  }
-};  //find email in users
- 
-const urlDatabase = {
-  b6UTxQ: {
-    longURL: "https://www.tsn.ca",
-    userID: "95xkr9"
-  },
-  i3BoGr: {
-    longURL: "https://www.google.ca",
-    userID: "aJ48lW"
-  }
-};
-
-const getUrls = user => {
-  const urls = {};
-  for (let shortUrl in urlDatabase) {
-    if (urlDatabase[shortUrl].userID === user) {
-      urls[shortUrl] = urlDatabase[shortUrl];
-    }
-  }
-  return urls;
-};
-
+// homepage if user redirect to urls else redirect to login
 app.get("/", (req, res) => {
   if((req.session.user_id)) {
     res.redirect('/urls/new')
   } else {
-    res.redirect('/login'); // homepage redirect to urls
+    res.redirect('/login'); 
   }
 });
 
@@ -79,6 +34,7 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+//URL page
 app.get("/urls", (req, res) => {
   if((req.session.user_id)) {
     const templateVars = { 
@@ -86,12 +42,13 @@ app.get("/urls", (req, res) => {
       user_id: req.session.user_id, 
       email: users[req.session.user_id].email
     };
-      return res.render("urls_index", templateVars);
+      return res.render("urls_index", templateVars);// if user return urls
   } else {
-    return res.redirect('/login'); // homepage redirect to urls
+    return res.redirect('/login'); 
   }
 });
 
+// create new url unless not logged in
 app.get("/urls/new", (req, res) => {
  if (req.session.user_id){
    const templateVars = { 
@@ -102,8 +59,9 @@ app.get("/urls/new", (req, res) => {
   } else {
     return res.redirect('/login');
   }
-});// new url
+});
 
+// new short url redirect to short url
 app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = {
@@ -111,12 +69,13 @@ app.post("/urls", (req, res) => {
     userID: req.session.user_id
   }
   return res.redirect(`/urls/${shortURL}`);
-}); // new short url redirect to short url
+});
 
+// URLS of login user
 app.get("/urls/:shortURL", (req, res) => {
   if (!req.session.user_id) {
     return res.redirect('/login');
-  }
+  } else {
     const templateVars = { 
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL].longURL,
@@ -124,8 +83,10 @@ app.get("/urls/:shortURL", (req, res) => {
     email: getEmail(req.session.user_id)
   };
   return res.render("urls_show", templateVars); 
+  }
 });
 
+//Update URL
 app.post("/urls/:shortURL", (req, res) => {
   if (!req.session.user_id) {
     return res.redirect('/login');
@@ -133,10 +94,11 @@ app.post("/urls/:shortURL", (req, res) => {
     const shortURL = req.params.shortURL;
     const longURL = req.body.longURL;
     urlDatabase[shortURL].longURL = longURL;
-    return res.redirect('/urls'); //update urls
+    return res.redirect('/urls');
   }
 });
 
+// delete short url
 app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
   if (!req.session.user_id || req.session.user_id !== urlDatabase[shortURL].userID) {
@@ -145,7 +107,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     delete urlDatabase[shortURL];
     return res.redirect('/urls');
   }
-}); // delete short url
+});
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
