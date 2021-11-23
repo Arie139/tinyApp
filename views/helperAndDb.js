@@ -1,24 +1,25 @@
+// rnd key generator 6 alphanumeric
 function generateRandomString() {
   let r = (Math.random() + 1).toString(36).substring(6)
   return r;
-}// rnd key generator 6 alphanumeric
+}
 
+//email from id
 const getEmail = user_id => {
-  if(users[user_id]) {
-    return users[user_id].email;
-  } else {
-    return null;
-  }
-};//email from id
+  users[user_id] ? users[user_id].email : null;
+};
 
+//find email in users
 const getUserByEmail = (email, users) => {
   for (let userId in users) {
+    console.log('+++++', users[userId]);
     if (users[userId].email === email) {
       return users[userId];
     }
   }
-};  //find email in users
+};  
 
+//user url database
 const getUrls = user => {
   const urls = {};
   for (let shortUrl in urlDatabase) {
@@ -38,6 +39,8 @@ const urlDatabase = {
     userID: "aJ48lW"
   }
 };
+
+//user database
 const users = { 
   "95xkr9": {
     id: "95xkr9", 
@@ -48,7 +51,8 @@ const users = {
     id: "2ps7g3", 
     email: "user2@example.com", 
     password: "dishwasher-funk"
-  } //user database
+  } 
+  
 };
 module.exports = {
   generateRandomString,

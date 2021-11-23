@@ -88,9 +88,7 @@ app.get("/urls/:shortURL", (req, res) => {
 
 //Update URL
 app.post("/urls/:shortURL", (req, res) => {
-  if (!req.session.user_id) {
-    return res.redirect('/login');
-  } else if (req.session.user_id === urlDatabase[req.params.shortURL].userID) {
+  if (req.session.user_id === urlDatabase[req.params.shortURL].userID) {
     const shortURL = req.params.shortURL;
     const longURL = req.body.longURL;
     urlDatabase[shortURL].longURL = longURL;
@@ -134,15 +132,16 @@ app.post('/login', (req, res) => {
   } else if (req.body.password.length === 0) {
     return res.status(400).send('Please enter a valid password');
   }
-  let user = getUserByEmail(req.body.email);
+  let user = getUserByEmail(req.body.email, users);
+  console.log(req.body.email, user);
   if(!user) {
     return res.status(400).send('User incorrect');
-  }
-  if (!bcrypt.compareSync(req.body.password, users[user.user_id].password)) {
+  }else if (!bcrypt.compareSync(req.body.password, user.password)) {
     return res.status(400).send('Password incorrect');
+  } else {
+    req.session.user_id = user.id;
+    return res.redirect('/urls');
   }
-  req.session.user_id = user.user_id;
-  return res.redirect('/urls');
 })
 
 //logout page
@@ -167,13 +166,15 @@ app.post('/register', (req, res) => {
     return res.status(400).send('Please enter a valid password');
   }
   
-  let userId = getUserByEmail(req.body.email);
+  let userId = getUserByEmail(req.body.email, users);
   //if the userId is not there
   if (!userId) {
     let genId = generateRandomString();
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
     users[genId] = { id: genId, email: req.body.email, password: hashedPassword};
     req.session.user_id = genId;
+    console.log('___', users);
+    console.log(getUserByEmail(req.body.email))
     return res.redirect('/urls');
   } else if (userId) {
     return res.status(403).send('There\'s already an account associated to this email.')
